@@ -1,0 +1,168 @@
+<div class="builder-container">
+  <div class="builder-header">
+    <h1>{{ isEditMode ? 'Edit Circuit' : 'Create New Circuit' }}</h1>
+    <p>Design your quantum circuit and configure its properties</p>
+  </div>
+
+  <div class="builder-content">
+    <!-- Circuit Form -->
+    <div class="form-section">
+      <form [formGroup]="circuitForm" (ngSubmit)="saveCircuit()">
+        <div class="form-group">
+          <label for="name">Circuit Name *</label>
+          <input 
+            id="name"
+            type="text" 
+            formControlName="name" 
+            placeholder="e.g., Bell State Generator"
+            class="form-input"
+            [class.error]="formControls['name'].invalid && formControls['name'].touched">
+          <span class="error-message" *ngIf="formControls['name'].invalid && formControls['name'].touched">
+            Name must be at least 3 characters
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description *</label>
+          <textarea 
+            id="description"
+            formControlName="description" 
+            rows="3"
+            placeholder="Describe what this circuit does..."
+            class="form-input"
+            [class.error]="formControls['description'].invalid && formControls['description'].touched">
+          </textarea>
+          <span class="error-message" *ngIf="formControls['description'].invalid && formControls['description'].touched">
+            Description must be at least 10 characters
+          </span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="qubits">Number of Qubits *</label>
+            <input 
+              id="qubits"
+              type="number" 
+              formControlName="qubits" 
+              min="1" 
+              max="5"
+              class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label for="category">Category *</label>
+            <select id="category" formControlName="category" class="form-input">
+              <option value="Algorithm">Algorithm</option>
+              <option value="Tutorial">Tutorial</option>
+              <option value="Experiment">Experiment</option>
+              <option value="Research">Research</option>
+              <option value="Game">Game</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="difficulty">Difficulty *</label>
+            <select id="difficulty" formControlName="difficulty" class="form-input">
+              <option value="Beginner">Beginner</option>
+              <option value="Intermediate">Intermediate</option>
+              <option value="Advanced">Advanced</option>
+              <option value="Expert">Expert</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="status">Status *</label>
+            <select id="status" formControlName="status" class="form-input">
+              <option value="Draft">Draft</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Completed">Completed</option>
+              <option value="Verified">Verified</option>
+              <option value="Archived">Archived</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="expectedOutput">Expected Output</label>
+          <input 
+            id="expectedOutput"
+            type="text" 
+            formControlName="expectedOutput" 
+            placeholder="e.g., 50% |00⟩ + 50% |11⟩"
+            class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label for="notes">Notes</label>
+          <textarea 
+            id="notes"
+            formControlName="notes" 
+            rows="2"
+            placeholder="Additional notes about this circuit..."
+            class="form-input">
+          </textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" (click)="cancel()" class="btn-secondary">
+            Cancel
+          </button>
+          <button type="button" (click)="simulateCircuit()" class="btn-simulate">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="5 3 19 12 5 21 5 3"></polygon>
+            </svg>
+            Simulate
+          </button>
+          <button type="submit" [disabled]="circuitForm.invalid" class="btn-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+              <polyline points="17 21 17 13 7 13 7 21"></polyline>
+              <polyline points="7 3 7 8 15 8"></polyline>
+            </svg>
+            {{ isEditMode ? 'Update Circuit' : 'Save Circuit' }}
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Gate Library Panel -->
+    <div class="gate-library-panel">
+      <h3>Quantum Gate Library</h3>
+      <p class="library-description">Select gates to add to your circuit</p>
+      
+      <div class="gate-grid">
+        <div 
+          *ngFor="let gate of gateLibrary"
+          class="gate-card"
+          [class.selected]="selectedGate === gate.type"
+          (click)="selectGate(gate.type)"
+          [style.border-color]="gate.color">
+          <div class="gate-symbol" [style.color]="gate.color">
+            {{ gate.symbol }}
+          </div>
+          <div class="gate-name">{{ gate.name }}</div>
+          <div class="gate-description">{{ gate.description }}</div>
+        </div>
+      </div>
+
+      <!-- Simulation Results -->
+      <div class="simulation-panel" *ngIf="showSimulation && simulationResult">
+        <h4>Simulation Results</h4>
+        <div class="simulation-output">
+          <pre>{{ simulationResult.visualization }}</pre>
+        </div>
+        <div class="probabilities">
+          <div *ngFor="let state of simulationResult?.probabilities | keyvalue" class="probability-bar">
+            <span class="state-label">|{{ state.key }}⟩</span>
+            <div class="bar-container">
+              <div class="bar-fill" [style.width.%]="state?.value ? state.value * 100 : 0"></div>
+            </div>
+            <span class="probability-value">{{ state?.value ? (state.value * 100).toFixed(2) : '0.00' }}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

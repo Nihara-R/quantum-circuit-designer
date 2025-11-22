@@ -1,0 +1,39 @@
+<div class="library-container">
+  <div class="library-header">
+    <h1>Quantum Algorithm Library</h1>
+    <p>Explore famous quantum algorithms and create circuits based on templates</p>
+  </div>
+
+  <div class="algorithm-grid">
+    <div *ngFor="let algo of algorithms" class="algorithm-card">
+      <div class="card-header">
+        <h3>{{ algo.name }}</h3>
+        <span class="difficulty-badge" [ngClass]="getDifficultyClass(algo.difficulty)">
+          {{ algo.difficulty }}
+        </span>
+      </div>
+
+      <p class="description">{{ algo.description }}</p>
+
+      <div class="card-meta">
+        <div class="meta-item">
+          <span class="label">Qubits Required</span>
+          <span class="value">{{ algo.qubits }}</span>
+        </div>
+      </div>
+
+      <div class="use-case">
+        <span class="label">Use Case</span>
+        <p>{{ algo.useCase }}</p>
+      </div>
+
+      <button (click)="createFromTemplate(algo)" class="btn-create">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Create from Template
+      </button>
+    </div>
+  </div>
+</div>

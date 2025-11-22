@@ -14,16 +14,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'quantum-circuit-designer' title`, () => {
+  it(`should have the 'Quantum Circuit Designer' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('quantum-circuit-designer');
+    expect(app.title).toEqual('Quantum Circuit Designer');
   });
 
-  it('should render title', () => {
+  it('should render app', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, quantum-circuit-designer');
+    expect(compiled.querySelector('.app-container')).toBeTruthy();
   });
 });

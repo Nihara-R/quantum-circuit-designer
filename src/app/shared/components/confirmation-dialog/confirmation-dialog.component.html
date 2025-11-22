@@ -1,0 +1,27 @@
+<div class="dialog-overlay" *ngIf="isOpen" (click)="onCancel()">
+  <div class="dialog-container" (click)="$event.stopPropagation()">
+    <div class="dialog-header">
+      <div class="icon-warning">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      </div>
+      <h2>{{ title }}</h2>
+    </div>
+    
+    <div class="dialog-body">
+      <p>{{ message }}</p>
+    </div>
+    
+    <div class="dialog-actions">
+      <button (click)="onCancel()" class="btn-cancel">
+        {{ cancelText }}
+      </button>
+      <button (click)="onConfirm()" class="btn-confirm">
+        {{ confirmText }}
+      </button>
+    </div>
+  </div>
+</div>

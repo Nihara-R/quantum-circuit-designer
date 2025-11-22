@@ -1,0 +1,27 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand" routerLink="/">
+      <div class="brand-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h1>Quantum Circuit Designer</h1>
+        <p>Build, Simulate & Learn Quantum Computing</p>
+      </div>
+    </div>
+    
+    <div class="navbar-actions">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Dashboard</a>
+      <a routerLink="/library" routerLinkActive="active" class="nav-link">Library</a>
+      <button (click)="navigateToNew()" class="btn-add">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        New Circuit
+      </button>
+    </div>
+  </div>
+</nav>

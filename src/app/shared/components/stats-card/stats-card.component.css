@@ -1,0 +1,115 @@
+.stats-card {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.5), rgba(15, 23, 42, 0.5));
+  backdrop-filter: blur(8px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.stats-card.color-cyan {
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+.stats-card.color-cyan:hover {
+  border-color: rgba(6, 182, 212, 0.5);
+  transform: translateY(-2px);
+}
+
+.stats-card.color-emerald {
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.stats-card.color-emerald:hover {
+  border-color: rgba(16, 185, 129, 0.5);
+  transform: translateY(-2px);
+}
+
+.stats-card.color-purple {
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.stats-card.color-purple:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+  transform: translateY(-2px);
+}
+
+.stats-card.color-amber {
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.stats-card.color-amber:hover {
+  border-color: rgba(245, 158, 11, 0.5);
+  transform: translateY(-2px);
+}
+.stats-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.stats-title {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+.color-cyan .stats-title {
+  color: #06b6d4;
+}
+
+.color-emerald .stats-title {
+  color: #10b981;
+}
+
+.color-purple .stats-title {
+  color: #8b5cf6;
+}
+
+.color-amber .stats-title {
+  color: #f59e0b;
+}
+.pulse-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+.color-cyan .pulse-dot {
+  background: #06b6d4;
+}
+
+.color-emerald .pulse-dot {
+  background: #10b981;
+}
+
+.color-purple .pulse-dot {
+  background: #8b5cf6;
+}
+
+.color-amber .pulse-dot {
+  background: #f59e0b;
+}
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.5);
+  }
+}
+
+.stats-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+  margin: 0.5rem 0;
+}
+
+.stats-subtitle {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  margin: 0;
+}

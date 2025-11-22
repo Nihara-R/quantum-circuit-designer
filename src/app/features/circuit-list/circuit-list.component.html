@@ -1,0 +1,156 @@
+<div class="circuit-list-container">
+  <!-- Statistics Dashboard -->
+  <div class="stats-grid">
+    <app-stats-card 
+      title="Total Circuits" 
+      [value]="statistics?.total || 0" 
+      subtitle="Saved designs"
+      color="cyan">
+    </app-stats-card>
+    
+    <app-stats-card 
+      title="Completed" 
+      [value]="statistics?.completed || 0" 
+      subtitle="Working circuits"
+      color="emerald">
+    </app-stats-card>
+    
+    <app-stats-card 
+      title="In Progress" 
+      [value]="statistics?.inProgress || 0" 
+      subtitle="Under development"
+      color="purple">
+    </app-stats-card>
+    <app-stats-card 
+      title="Total Gates" 
+      [value]="statistics?.totalGates || 0" 
+      subtitle="Quantum operations"
+      color="amber">
+    </app-stats-card>
+  </div>
+
+  <!-- Search Bar -->
+  <div class="search-section">
+    <div class="search-container">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <input 
+        type="text" 
+        [(ngModel)]="searchText"
+        placeholder="Search circuits by name, description, or category..." 
+        class="search-input">
+    </div>
+  </div>
+  <!-- Circuit Library Header -->
+  <div class="section-header">
+    <h2>My Circuit Library</h2>
+    <p>{{ (circuits | filter:searchText).length }} circuit(s) found</p>
+  </div>
+
+  <!-- Circuit Grid -->
+  <div class="circuit-grid" *ngIf="circuits.length > 0; else noCircuits">
+    <div class="circuit-card" *ngFor="let circuit of circuits | filter:searchText">
+      <!-- Card Header -->
+      <div class="card-header">
+        <div class="header-top">
+          <span class="difficulty-badge" [ngClass]="getDifficultyClass(circuit.difficulty)">
+            {{ circuit.difficulty }}
+          </span>
+          <div class="gate-preview">
+            <span *ngFor="let gate of circuit.gates.slice(0, 3)" class="gate-icon">
+              {{ gate.type === 'CNOT' ? '⊕' : gate.type }}
+            </span>
+          </div>
+        </div>
+        <h3 class="circuit-name">{{ circuit.name }}</h3>
+        <p class="circuit-description">{{ circuit.description }}</p>
+      </div>
+      <!-- Card Body -->
+      <div class="card-body">
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="info-label">Qubits</span>
+            <span class="info-value">{{ circuit.qubits }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Gates</span>
+            <span class="info-value">{{ circuit.gates.length }}</span>
+          </div>
+        </div>
+
+        <div class="category-section">
+          <span class="info-label">Category</span>
+          <span class="category-badge">{{ circuit.category }}</span>
+        </div>
+
+        <div class="status-section">
+          <span class="info-label">Status</span>
+          <div class="status-indicator">
+            <span class="status-icon">{{ getStatusIcon(circuit.status) }}</span>
+            <span class="status-text">{{ circuit.status }}</span>
+          </div>
+        </div>
+         <div class="output-section" *ngIf="circuit.expectedOutput">
+          <span class="info-label">Expected Output</span>
+          <p class="output-text">{{ circuit.expectedOutput }}</p>
+        </div>
+      </div>
+
+      <!-- Card Actions -->
+      <div class="card-actions">
+        <button (click)="viewCircuit(circuit.id)" class="btn-action btn-view">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          View
+        </button>
+        <button (click)="editCircuit(circuit.id)" class="btn-action btn-edit">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+          </svg>
+          Edit
+        </button>
+        <button (click)="duplicateCircuit(circuit.id)" class="btn-action btn-duplicate">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+          </svg>
+        </button>
+        <button (click)="confirmDelete(circuit.id)" class="btn-action btn-delete">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="3 6 5 6 21 6"></polyline>
+            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- No Circuits Message -->
+  <ng-template #noCircuits>
+    <div class="no-circuits">
+      <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+      </svg>
+      <h3>No Circuits Yet</h3>
+      <p>Start building your first quantum circuit!</p>
+      <button routerLink="/circuits/new" class="btn-create-first">
+        Create Your First Circuit
+      </button>
+    </div>
+  </ng-template>
+
+  <!-- Delete Confirmation Dialog -->
+  <app-confirmation-dialog
+    [isOpen]="showDeleteDialog"
+    title="Delete Circuit"
+    message="Are you sure you want to delete this circuit? This action cannot be undone."
+    confirmText="Delete"
+    cancelText="Cancel"
+    (confirmed)="deleteCircuit()"
+    (cancelled)="cancelDelete()">
+  </app-confirmation-dialog>
+</div>
